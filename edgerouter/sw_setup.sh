@@ -32,11 +32,11 @@ GATEWAYMAC=`ifconfig eth0 | awk '/HWaddr/ { print $5 }' | sed 's/:/-/g'`
 mkdir -p /etc/chilli/walled-garden
 
 if [ ! -f /usr/bin/smartwifi ]; then
-  curl https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/edgerouter/smartwifi -o /usr/bin/smartwifi
+  curl -sf https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/edgerouter/smartwifi -o /usr/bin/smartwifi
   chmod a+x /usr/bin/smartwifi
 fi
 
-curl -o /etc/chilli/config https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/edgerouter/eth2/defaults
+curl -sf -o /etc/chilli/config https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/edgerouter/eth2/defaults
 
 sed -i "/HS_UAMDOMAINS/d" /etc/chilli/config
 echo "HS_UAMDOMAINS=\".smartwifi.vn .smartwifi.com.vn\"" >> /etc/chilli/config
@@ -44,7 +44,7 @@ echo "HS_UAMDOMAINS=\".smartwifi.vn .smartwifi.com.vn\"" >> /etc/chilli/config
 sed -i "/HS_LANIF/d" /etc/chilli/config
 echo "HS_LANIF=$WLAN" >> /etc/chilli/config
 
-curl -o /etc/heartbeat.sh https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/edgerouter/heartbeat.sh
+curl -sf -o /etc/heartbeat.sh https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/edgerouter/heartbeat.sh
 chmod 755 /etc/heartbeat.sh
 
 crontab -l > /tmp/mycron
@@ -54,6 +54,7 @@ sed -i '/checkrunning/d' /tmp/mycron
 echo "*/5 * * * * /etc/heartbeat.sh $GATEWAYMAC" >> /tmp/mycron
 echo "0 5 * * * /sbin/shutdown -r now" >> /tmp/mycron
 echo "*/3 * * * * /etc/init.d/chilli checkrunning" >> /tmp/mycron
+echo "55 4 * * * /usr/sbin/smartwifi update" >> /tmp/mycron
 crontab /tmp/mycron
 rm /tmp/mycron
 

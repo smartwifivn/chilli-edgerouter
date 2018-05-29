@@ -18,15 +18,16 @@ case "$1" in
       exit $?
       ;;
   update)
+      mkdir -p /tmp/walled-garden
       curl -o /tmp/xpHWD7YbSYfTnNWW https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/xpHWD7YbSYfTnNWW
       for FILE in `cat /tmp/xpHWD7YbSYfTnNWW`; do
-        curl -o /etc/chilli/walled-garden/$FILE https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/$FILE
+        curl -sf -o /etc/chilli/walled-garden/$FILE https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/$FILE
       done
 
       #remove general.conf if existed
       sed -i "/general.conf\|^$/d" $CHILLI_CONF_FILE
       echo "include $CHILLI_CONF_FOLDER/walled-garden/general.conf" >> $CHILLI_CONF_FILE
-      
+
       echo "Update completed!"
       exit 3
       ;;
