@@ -22,9 +22,6 @@ case "$1" in
       for FILE in `cat /tmp/xpHWD7YbSYfTnNWW`; do
         curl -o /etc/chilli/walled-garden/$FILE https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/$FILE
       done
-      #remove general.conf if existed
-      sed -i "/general.conf\|^$/d" $CHILLI_CONF_FILE
-      echo "include $CHILLI_CONF_FOLDER/walled-garden/general.conf" >> $CHILLI_CONF_FILE
       echo "Update completed!"
       exit 3
       ;;
