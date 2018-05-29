@@ -54,7 +54,7 @@ case "$1" in
       case "$2" in
         interface)
           read -p "Which interface is used for hotspot [eth2]? " INTERFACE
-          [ -z $INTERFACE ] && exit 0
+          [ -z $INTERFACE ] && INTERFACE=eth2
           sed -i "/HS_LANIF/d" /etc/chilli/config
           echo "HS_LANIF=$INTERFACE" >> /etc/chilli/config
           ;;
