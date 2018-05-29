@@ -20,7 +20,7 @@ WHITELABEL="http:\/\/cloud.smartwifi.vn/splash/prelogin"
 
 #read -p "Which interface is your WAN [eth0]? " WAN
 #[ -z $WAN ] && WAN=eth0
-LAN_INTERFACES=$(ifconfig | grep Link | grep encap | awk '{print $1}' | sed '/lo/d' | sed '/ppp*/d' | sed '/tun*/d' | sed '/imq*/d')
+LAN_INTERFACES=$(ifconfig | grep Link | grep encap | awk '{print $1}' | sed '/lo/d' | sed '/eth1/d' | sed '/ppp*/d' | sed '/tun*/d' | sed '/imq*/d')
 echo "Available interfaces:"
 echo $LAN_INTERFACES
 read -p "Which interface is used for hotspot [eth2]? " WLAN
@@ -29,39 +29,20 @@ read -p "Which interface is used for hotspot [eth2]? " WLAN
 NETWORK="172.16.0"
 GATEWAYMAC=`ifconfig eth0 | awk '/HWaddr/ { print $5 }' | sed 's/:/-/g'`
 
-mkdir /etc/chilli/$WLAN
-mkdir /etc/chilli/$WLAN/walled-garden
+mkdir -p /etc/chilli/walled-garden
 
 if [ ! -f /usr/bin/smartwifi ]; then
   curl http://config.smartwifi.vn/edgerouter/smartwifi -o /usr/bin/smartwifi
   chmod a+x /usr/bin/smartwifi
 fi
 
-echo "include /etc/chilli/$WLAN/main.conf
-include /etc/chilli/$WLAN/hs.conf
-include /etc/chilli/$WLAN/local.conf
-ipup /etc/chilli/up.sh
-ipdown /etc/chilli/down.sh" > /etc/chilli/$WLAN/chilli.conf
-[ -f /etc/chilli/defaults ] && rm /etc/chilli/defaults
-[ -f /etc/chilli/hs.conf ] && rm /etc/chilli/hs.conf
-[ -f /etc/chilli/local.conf ] && rm /etc/chilli/local.conf
-[ -f /etc/chilli/main.conf ] && rm /etc/chilli/main.conf
+curl -o /etc/chilli/config http://config.smartwifi.vn/edgerouter/eth2/defaults
 
-curl -o /etc/chilli/$WLAN/config http://config.smartwifi.vn/edgerouter/eth2/defaults
+sed -i "/HS_UAMDOMAINS/d" /etc/chilli/config
+echo "HS_UAMDOMAINS=\".smartwifi.vn .smartwifi.com.vn\"" >> /etc/chilli/config
 
-sed -i "/HS_UAMDOMAINS/d" /etc/chilli/$WLAN/config
-echo "HS_UAMDOMAINS=\".smartwifi.vn .smartwifi.com.vn\"" >> /etc/chilli/$WLAN/config
-
-#sed -i "/HS_NASID/d" /etc/chilli/$WLAN/config
-#echo "HS_NASID=$GATEWAYMAC" >> /etc/chilli/$WLAN/config
-
-# sed -i -e "/HS_NASID/d" /etc/chilli/$WLAN/config
-# echo "HS_NASMAC=$GATEWAYMAC" >> /etc/chilli/$WLAN/config
-
-# sed -i "/HS_WANIF/d" /etc/chilli/$WLAN/config
-sed -i "/HS_LANIF/d" /etc/chilli/$WLAN/config
-# echo "HS_WANIF=$(route | grep default | grep 0.0.0.0 | awk '{print $8}')" >> /etc/chilli/$WLAN/config
-echo "HS_LANIF=$WLAN" >> /etc/chilli/$WLAN/config
+sed -i "/HS_LANIF/d" /etc/chilli/config
+echo "HS_LANIF=$WLAN" >> /etc/chilli/config
 
 curl -o /etc/heartbeat.sh http://config.smartwifi.vn/edgerouter/heartbeat.sh
 chmod 755 /etc/heartbeat.sh

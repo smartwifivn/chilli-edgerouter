@@ -3,9 +3,9 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 . /lib/init/vars.sh
 
-INTERFACE=$(ls -d /etc/chilli/*/ | sed '/www/d' | awk -F"/" '{print $4}')
-CHILLI_CONF_FOLDER=/etc/chilli/$INTERFACE
-CHILLI_CONF_FILE=/etc/chilli/$INTERFACE/chilli.conf
+# INTERFACE=$(ls -d /etc/chilli/*/ | sed '/www/d' | awk -F"/" '{print $4}')
+CHILLI_CONF_FOLDER=/etc/chilli
+CHILLI_CONF_FILE=/etc/chilli.conf
 
 mkdir -p $CHILLI_CONF_FOLDER/walled-garden
 
@@ -20,7 +20,7 @@ case "$1" in
   update)
       curl -o /tmp/xpHWD7YbSYfTnNWW http://config.smartwifi.vn/xpHWD7YbSYfTnNWW
       for FILE in `cat /tmp/xpHWD7YbSYfTnNWW`; do
-        curl -o /etc/chilli/$INTERFACE/walled-garden/$FILE http://config.smartwifi.vn/$FILE
+        curl -o /etc/chilli/walled-garden/$FILE http://config.smartwifi.vn/$FILE
       done
       #remove general.conf if existed
       sed -i "/general.conf\|^$/d" $CHILLI_CONF_FILE
