@@ -1,0 +1,51 @@
+#!/bin/sh
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+. /lib/init/vars.sh
+
+INTERFACE=$(ls -d /etc/chilli/*/ | sed '/www/d' | awk -F"/" '{print $4}')
+CHILLI_CONF_FOLDER=/etc/chilli/$INTERFACE
+CHILLI_CONF_FILE=/etc/chilli/$INTERFACE/chilli.conf
+
+mkdir -p $CHILLI_CONF_FOLDER/walled-garden
+
+case "$1" in
+  status|"")
+      echo "Enabled methods:"
+      cat $CHILLI_CONF_FILE | grep walled-garden \
+        | awk '{ print $2}' | awk -F"/" '{print "+ "$6}' \
+        | sed '/general/d' | awk -F"." '{print $1}'
+      exit $?
+      ;;
+  update)
+      curl -o /tmp/xpHWD7YbSYfTnNWW http://config.smartwifi.vn/xpHWD7YbSYfTnNWW
+      for FILE in `cat /tmp/xpHWD7YbSYfTnNWW`; do
+        curl -o /etc/chilli/$INTERFACE/walled-garden/$FILE http://config.smartwifi.vn/$FILE
+      done
+      #remove general.conf if existed
+      sed -i "/general.conf\|^$/d" $CHILLI_CONF_FILE
+      echo "include $CHILLI_CONF_FOLDER/walled-garden/general.conf" >> $CHILLI_CONF_FILE
+      echo "Update completed! Please restart service"
+      exit 3
+      ;;
+  enable)
+      sed -i "/$2.conf\|^$/d" $CHILLI_CONF_FILE
+      [ -f $CHILLI_CONF_FOLDER/walled-garden/$2.conf ] && echo "include $CHILLI_CONF_FOLDER/walled-garden/$2.conf" >> $CHILLI_CONF_FILE
+      /etc/init.d/chilli restart
+      exit 1
+      ;;
+  disable)
+      sed -i "/$2.conf\|^$/d" $CHILLI_CONF_FILE
+      /etc/init.d/chilli restart
+      exit 1
+      ;;
+  start)
+      /etc/init.d/chilli start
+      ;;
+  stop)
+      /etc/init.d/chilli stop
+      ;;
+  restart)
+      /etc/init.d/chilli restart
+      ;;
+esac

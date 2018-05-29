@@ -1,0 +1,61 @@
+# -*- mode: shell-script; -*-
+#
+#   Coova-Chilli Default Configurations.
+#   To customize, copy this file to /etc/chilli/config
+#   and edit to your liking. This is included in shell scripts
+#   that configure chilli and related programs before file 'config'.
+
+HS_LOC_ID="1"
+HS_LOC_NAME="smartwifi"
+HS_NASID=$(ifconfig eth0 | awk '/HWaddr/ { print $5 }' | sed 's/:/-/g')
+
+#############################################################
+
+HS_WANIF=$(route | grep default | grep 0.0.0.0 | awk '{print $8}') || HS_WANIF=eth0     # WAN Interface toward the Internet
+HS_LANIF=eth2               # Subscriber Interface for client devices
+HS_UAMPORT=3990            # HotSpot UAM Port (on subscriber network)
+HS_UAMUIPORT=4990          # HotSpot UAM "UI" Port (on subscriber network, for embedded portal)
+
+# LOCAL MAC addresses
+HS_MACALLOWLOCAL=on
+
+#HS_MACALLOW="XX-XX-XX-XX-XX-XX,XX-XX-XX-XX-XX-XX"
+HS_MACALLOW=""
+
+# Below this line is pretty much standard for HotSpotSystems
+
+HS_DNS1=8.8.8.8
+HS_DNS2=8.8.4.4
+
+HS_NETWORK=172.16.0.0
+HS_NETMASK=255.255.252.0
+HS_UAMLISTEN=172.16.0.1
+HS_DNS_DOMAIN=key.chillispot.info
+HS_DYNIP=172.16.0.2
+HS_DYNIP_MASK=255.255.252.0
+HS_RADIUS=radius03.smartwifi.vn
+HS_RADIUS2=radius04.smartwifi.vn
+HS_LEASE=10800
+HS_SWAPOCTETS="on"
+
+HS_UAMHOMEPAGE=""
+HS_UAMFORMAT="http://cloud.smartwifi.vn/splash/prelogin"
+HS_PROVIDER="SmartWifi"
+HS_PROVIDER_LINK="http://www.smartwifi.vn/"
+
+HS_MODE=hotspot
+HS_TYPE=chillispot
+hs_lan_access="deny"
+
+HS_RADCONF="off"
+HS_UAMSERVER=$HS_UAMLISTEN
+HS_UAMSECRET="smartwifi"
+HS_RADSECRET="Zi0HgArisaKoevwz"
+HS_AAA="radius"
+
+HS_UAMALLOW="cloud.smartwifi.vn smartwifi.vn smartwifi.com.vn static.smartwifi.vn cdn.smartwifi.vn ad.smartwifi.vn"
+HS_UAMDOMAINS=".smartwifi.vn .smartwifi.com.vn"
+
+HS_UAMALIASNAME=login
+HS_NASMAC=$(ifconfig eth0 | awk '/HWaddr/ { print $5 }' | sed 's/:/-/g')
+#HS_ANYIP=on
