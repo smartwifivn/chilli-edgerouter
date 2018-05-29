@@ -58,7 +58,7 @@ echo "0 5 * * * /sbin/shutdown -r now" >> /tmp/mycron
 echo "*/3 * * * * /etc/init.d/chilli checkrunning" >> /tmp/mycron
 echo "55 4 * * * /usr/sbin/smartwifi update" >> /tmp/mycron
 crontab /tmp/mycron
-rm /tmp/mycron
+# rm /tmp/mycron
 
 cp /etc/default/chilli /etc/default/chilli.tmp
 cat /etc/default/chilli.tmp | sed "s/START_CHILLI=0/START_CHILLI=1/g"  > /etc/default/chilli
