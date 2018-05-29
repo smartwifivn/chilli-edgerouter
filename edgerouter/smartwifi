@@ -25,7 +25,7 @@ case "$1" in
       #remove general.conf if existed
       sed -i "/general.conf\|^$/d" $CHILLI_CONF_FILE
       echo "include $CHILLI_CONF_FOLDER/walled-garden/general.conf" >> $CHILLI_CONF_FILE
-      echo "Update completed! Please restart service"
+      echo "Update completed!"
       exit 3
       ;;
   enable)
