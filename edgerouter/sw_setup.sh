@@ -52,16 +52,14 @@ crontab -l > /tmp/mycron
 sed -i '/heartbeat/d' /tmp/mycron
 sed -i '/shutdown/d' /tmp/mycron
 sed -i '/checkrunning/d' /tmp/mycron
-sed -i '/smartwifi update/d' /tmp/mycron
-echo "*/5 * * * * /etc/heartbeat.sh $GATEWAYMAC" >> /tmp/mycron
-echo "0 5 * * * /sbin/shutdown -r now" >> /tmp/mycron
+sed -i '/update/d' /tmp/mycron
 echo "*/3 * * * * /etc/init.d/chilli checkrunning" >> /tmp/mycron
+echo "*/5 * * * * /etc/heartbeat.sh $GATEWAYMAC" >> /tmp/mycron
 echo "55 4 * * * /usr/sbin/smartwifi update" >> /tmp/mycron
-
-sleep 3
+echo "0 5 * * * /sbin/shutdown -r now" >> /tmp/mycron
 
 crontab /tmp/mycron
-# rm /tmp/mycron
+rm /tmp/mycron
 
 cp /etc/default/chilli /etc/default/chilli.tmp
 cat /etc/default/chilli.tmp | sed "s/START_CHILLI=0/START_CHILLI=1/g"  > /etc/default/chilli
