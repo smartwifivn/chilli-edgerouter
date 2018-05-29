@@ -47,20 +47,6 @@ echo "HS_LANIF=$WLAN" >> /etc/chilli/config
 curl -sf -o /etc/heartbeat.sh https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/edgerouter/heartbeat.sh
 chmod 755 /etc/heartbeat.sh
 
-crontab -l > /tmp/mycron
-[ -f /tmp/mycron ] || touch /tmp/mycron
-sed -i '/heartbeat/d' /tmp/mycron
-sed -i '/shutdown/d' /tmp/mycron
-sed -i '/checkrunning/d' /tmp/mycron
-sed -i '/update/d' /tmp/mycron
-echo "*/3 * * * * /etc/init.d/chilli checkrunning" >> /tmp/mycron
-echo "*/5 * * * * /etc/heartbeat.sh $GATEWAYMAC" >> /tmp/mycron
-echo "55 4 * * * /usr/sbin/smartwifi update" >> /tmp/mycron
-echo "0 5 * * * /sbin/shutdown -r now" >> /tmp/mycron
-
-crontab /tmp/mycron
-rm /tmp/mycron
-
 cp /etc/default/chilli /etc/default/chilli.tmp
 cat /etc/default/chilli.tmp | sed "s/START_CHILLI=0/START_CHILLI=1/g"  > /etc/default/chilli
 rm /etc/default/chilli.tmp
@@ -81,5 +67,19 @@ echo "Please add the following MAC address to your account"
 echo "Gateway MAC: $GATEWAYMAC"
 /usr/bin/smartwifi enable facebook_js
 /etc/init.d/chilli start
+
+crontab -l > /tmp/mycron
+[ -f /tmp/mycron ] || touch /tmp/mycron
+sed -i '/heartbeat/d' /tmp/mycron
+sed -i '/shutdown/d' /tmp/mycron
+sed -i '/checkrunning/d' /tmp/mycron
+sed -i '/update/d' /tmp/mycron
+echo "*/3 * * * * /etc/init.d/chilli checkrunning" >> /tmp/mycron
+echo "*/5 * * * * /etc/heartbeat.sh $GATEWAYMAC" >> /tmp/mycron
+echo "55 4 * * * /usr/sbin/smartwifi update" >> /tmp/mycron
+echo "0 5 * * * /sbin/shutdown -r now" >> /tmp/mycron
+
+crontab /tmp/mycron
+rm /tmp/mycron
 
 exit
