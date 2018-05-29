@@ -13,7 +13,7 @@ case "$1" in
   status|"")
       echo "Enabled methods:"
       cat $CHILLI_CONF_FILE | grep walled-garden \
-        | awk '{ print $2}' | awk -F"/" '{print "+ "$6}' \
+        | awk '{ print $2}' | awk -F"/" '{print "+ "$5}' \
         | sed '/general/d' | awk -F"." '{print $1}'
       exit $?
       ;;
