@@ -48,9 +48,11 @@ curl -sf -o /etc/heartbeat.sh https://raw.githubusercontent.com/smartwifivn/chil
 chmod 755 /etc/heartbeat.sh
 
 crontab -l > /tmp/mycron
+[ -f /tmp/mycron ] || touch /tmp/mycron
 sed -i '/heartbeat/d' /tmp/mycron
 sed -i '/shutdown/d' /tmp/mycron
 sed -i '/checkrunning/d' /tmp/mycron
+sed -i '/smartwifi update/d' /tmp/mycron
 echo "*/5 * * * * /etc/heartbeat.sh $GATEWAYMAC" >> /tmp/mycron
 echo "0 5 * * * /sbin/shutdown -r now" >> /tmp/mycron
 echo "*/3 * * * * /etc/init.d/chilli checkrunning" >> /tmp/mycron
