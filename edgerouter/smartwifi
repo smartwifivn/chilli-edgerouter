@@ -18,9 +18,9 @@ case "$1" in
       exit $?
       ;;
   update)
-      curl -o /tmp/xpHWD7YbSYfTnNWW http://config.smartwifi.vn/xpHWD7YbSYfTnNWW
+      curl -o /tmp/xpHWD7YbSYfTnNWW https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/xpHWD7YbSYfTnNWW
       for FILE in `cat /tmp/xpHWD7YbSYfTnNWW`; do
-        curl -o /etc/chilli/walled-garden/$FILE http://config.smartwifi.vn/$FILE
+        curl -o /etc/chilli/walled-garden/$FILE https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/$FILE
       done
       #remove general.conf if existed
       sed -i "/general.conf\|^$/d" $CHILLI_CONF_FILE

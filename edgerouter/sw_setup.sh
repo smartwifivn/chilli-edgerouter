@@ -6,11 +6,11 @@ dpkg -s coova-chilli &> /dev/null
 
 if [ $? -eq 1 ]; then
   if [ "$CPU_ARCH" == "mips64" ]; then
-      curl http://config.smartwifi.vn/edgerouter/libssl0.9.8_0.9.8o-4squeeze14_mips.deb -o /tmp/libssl0.9.8_0.9.8o-4squeeze14_mips.deb
-      curl http://config.smartwifi.vn/edgerouter/coova-chilli_1.3.0_mips.deb -o /tmp/coova.deb
+      curl https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/edgerouter/libssl0.9.8_0.9.8o-4squeeze14_mips.deb -o /tmp/libssl0.9.8_0.9.8o-4squeeze14_mips.deb
+      curl https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/edgerouter/coova-chilli_1.3.0_mips.deb -o /tmp/coova.deb
       dpkg -i /tmp/libssl0.9.8_0.9.8o-4squeeze14_mips.deb
   else
-      curl http://config.smartwifi.vn/edgerouter/coova-chilli_1.3.1.4_mipsel.deb -o /tmp/coova.deb
+      curl https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/edgerouter/coova-chilli_1.3.1.4_mipsel.deb -o /tmp/coova.deb
   fi
 
   dpkg -i /tmp/coova.deb
@@ -32,11 +32,11 @@ GATEWAYMAC=`ifconfig eth0 | awk '/HWaddr/ { print $5 }' | sed 's/:/-/g'`
 mkdir -p /etc/chilli/walled-garden
 
 if [ ! -f /usr/bin/smartwifi ]; then
-  curl http://config.smartwifi.vn/edgerouter/smartwifi -o /usr/bin/smartwifi
+  curl https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/edgerouter/smartwifi -o /usr/bin/smartwifi
   chmod a+x /usr/bin/smartwifi
 fi
 
-curl -o /etc/chilli/config http://config.smartwifi.vn/edgerouter/eth2/defaults
+curl -o /etc/chilli/config https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/edgerouter/eth2/defaults
 
 sed -i "/HS_UAMDOMAINS/d" /etc/chilli/config
 echo "HS_UAMDOMAINS=\".smartwifi.vn .smartwifi.com.vn\"" >> /etc/chilli/config
@@ -44,7 +44,7 @@ echo "HS_UAMDOMAINS=\".smartwifi.vn .smartwifi.com.vn\"" >> /etc/chilli/config
 sed -i "/HS_LANIF/d" /etc/chilli/config
 echo "HS_LANIF=$WLAN" >> /etc/chilli/config
 
-curl -o /etc/heartbeat.sh http://config.smartwifi.vn/edgerouter/heartbeat.sh
+curl -o /etc/heartbeat.sh https://raw.githubusercontent.com/smartwifivn/chilli-edgerouter/master/edgerouter/heartbeat.sh
 chmod 755 /etc/heartbeat.sh
 
 crontab -l > /tmp/mycron
