@@ -12,10 +12,18 @@ mkdir -p $CHILLI_CONF_FOLDER/walled-garden
 case "$1" in
   status|"")
       echo "Enabled methods:"
+      # set text color
+      tput setaf 2
       cat $CHILLI_CONF_FILE | grep walled-garden \
         | awk '{ print $2}' | awk -F"/" '{print "+ "$5}' \
         | sed '/general/d' | awk -F"." '{print $1}'
-      exit $?
+
+      tput setaf 7
+      echo "Hotspot is running on interface:"
+      tput setaf 2
+      cat /etc/chilli/config | grep HS_LANIF | awk -F"=" '{print $2}'
+      tput setaf 7
+      exit 1
       ;;
   update)
       mkdir -p /tmp/walled-garden
@@ -41,6 +49,19 @@ case "$1" in
       sed -i "/$2.conf\|^$/d" $CHILLI_CONF_FILE
       /etc/init.d/chilli restart
       exit 1
+      ;;
+  set)
+      case "$2" in
+        interface)
+          read -p "Which interface is used for hotspot [eth2]? " INTERFACE
+          [ -z $INTERFACE ] && exit 0
+          sed -i "/HS_LANIF/d" /etc/chilli/config
+          echo "HS_LANIF=$INTERFACE" >> /etc/chilli/config
+          ;;
+        *)
+          echo "use (interface)"
+          ;;
+      esac
       ;;
   start)
       /etc/init.d/chilli start
