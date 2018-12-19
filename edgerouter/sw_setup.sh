@@ -76,7 +76,7 @@ sed -i '/checkrunning/d' /tmp/mycron
 sed -i '/update/d' /tmp/mycron
 echo "*/3 * * * * /etc/init.d/chilli checkrunning" >> /tmp/mycron
 echo "*/5 * * * * /etc/heartbeat.sh $GATEWAYMAC" >> /tmp/mycron
-echo "55 4 * * * /usr/sbin/smartwifi update" >> /tmp/mycron
+# echo "55 4 * * * /usr/sbin/smartwifi update" >> /tmp/mycron
 echo "0 5 * * * /sbin/shutdown -r now" >> /tmp/mycron
 
 crontab /tmp/mycron
