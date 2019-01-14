@@ -68,13 +68,13 @@ echo "Gateway MAC: $GATEWAYMAC"
 /usr/bin/smartwifi enable facebook_js
 /etc/init.d/chilli start
 
-crontab -l > /tmp/mycron
+#crontab -l > /tmp/mycron
 [ -f /tmp/mycron ] || touch /tmp/mycron
-sed -i '/heartbeat/d' /tmp/mycron
-sed -i '/shutdown/d' /tmp/mycron
-sed -i '/checkrunning/d' /tmp/mycron
-sed -i '/update/d' /tmp/mycron
-echo "*/3 * * * * /etc/init.d/chilli checkrunning" >> /tmp/mycron
+#sed -i '/heartbeat/d' /tmp/mycron
+#sed -i '/shutdown/d' /tmp/mycron
+#sed -i '/checkrunning/d' /tmp/mycron
+#sed -i '/update/d' /tmp/mycron
+echo "*/10 * * * * /etc/init.d/chilli checkrunning" > /tmp/mycron
 echo "*/5 * * * * /etc/heartbeat.sh $GATEWAYMAC" >> /tmp/mycron
 # echo "55 4 * * * /usr/sbin/smartwifi update" >> /tmp/mycron
 echo "0 5 * * * /sbin/shutdown -r now" >> /tmp/mycron
